@@ -1,0 +1,27 @@
+<form method="POST" action="<%= responses_url %>">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<input type="hidden" name="response[choice_ids][]" value="">
+	<ul>
+		<% @survey.each do |question| %>
+			<li><%= h(question.body) %></li>
+				<ul>
+					<% question.choices.each do |choice| %>
+						<!-- TODO: THIS SHOULD BE CACHED!! -->
+						<li>
+							<input type="checkbox"
+										 name="response[choice_ids][]"
+										 value="<%= choice.id %>"
+										 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
+							<%= h(choice.body) %>
+						</li>
+					<% end %>
+				</ul>
+		<% end %>
+	</ul>
+
+	<button type="submit">Submit</button>
+</form>
+
+<script>
+// TODO: Make the checkboxes act like radio buttons
+</script>
