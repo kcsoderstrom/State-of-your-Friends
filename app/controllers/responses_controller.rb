@@ -1,9 +1,12 @@
 class ResponsesController < ApplicationController
 	def create
-		response_params[:choise_ids].each do |choice_id|
-			# Delete any old responses for that question
-			# if the choice is different.
-			# Add the choice.
+		response_params[:choice_ids].each do |choice_id|
+			next unless choice_id.present?
+			response = Response.new(choice_id: choice_id, user_id: current_user.id)
+			puts "CHOICE ID OK"
+			p response.choice_id
+			p choice_id
+			response.displace_current_response
 		end
 		redirect_to survey_url
 	end
