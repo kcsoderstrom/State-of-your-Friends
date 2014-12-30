@@ -1,12 +1,7 @@
 class ResultsController < ApplicationController
 	def show
+		@survey = current_user.survey
+		@friends = current_user.friends
+		render :show
 	end
-
-	def create
-		#TODO: 
-		puts params
-		puts "\n\n\n\n\n\n"
-		render json: "aight"
-	end
-
 end

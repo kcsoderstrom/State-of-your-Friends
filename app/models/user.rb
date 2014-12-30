@@ -1,8 +1,5 @@
-# require 'net/http'
-
 class User < ActiveRecord::Base
   has_many :responses
-
 
   after_initialize :ensure_session_token
   include BCrypt
@@ -38,19 +35,45 @@ class User < ActiveRecord::Base
   end
 
   def friends
-
-
-		# url = URI.parse('https://graph.facebook.com/me?fields=friends.limit(5000)')
-		# req = Net::HTTP::Get.new(url.to_s)
-		# res = Net::HTTP.start(url.host, url.port) {|http|
-		#   http.request(req)
-		# }
-		# res.body
-		# , {access_token: self.facebook_token, limit: 5000}
-  	# r = requests.request("GET", "https://graph.facebook.com/user/friends", )
-  	# r.contents
     graph = Koala::Facebook::API.new(self.facebook_token)
-    graph.get_connections("me", "friends")
+    friend_info = graph.get_connections("me", "friends")
+    friend_info.map{ |info| User.find_by_uid(info["id"]) }
+    #TODO: You have a table to store this.
+    #      Update the table on sign-in.
+    #      Then you can just use an association.
+  end
+
+  def survey
+  	Question.where(survey_id: survey_id)
+  end
+
+  def response_for_question(question_id)
+  	response = Choice.find_by_sql(<<-SQL
+  		SELECT
+  			choices.*
+  		FROM (
+  			SELECT
+  				*
+  			FROM
+	  			responses
+	  		WHERE
+	  			responses.user_id = #{id}
+	  	) AS user_responses
+  		INNER JOIN
+  			choices
+  		ON
+  			user_responses.choice_id = choices.id
+  		INNER JOIN
+  			questions
+  		ON
+  			choices.question_id = questions.id
+  		WHERE
+  			questions.id = #{question_id}
+  		LIMIT 1;
+  	SQL
+  	)
+
+  	response.length > 0 ? response.first : nil
   end
 
   private

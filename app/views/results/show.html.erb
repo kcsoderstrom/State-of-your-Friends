@@ -1,0 +1,13 @@
+<ul>
+	<% @survey.each do |question| %>
+		<li><%= question.body %></li>
+		<ul>
+			<% @friends.each do |friend| %>
+				<li>
+					<% response = friend.response_for_question(question.id) %>
+					<%= response.nil? ? "" : response.body %>
+				</li>
+			<% end %>
+		</ul>
+	<% end %>
+</ul>
