@@ -3,10 +3,6 @@ class Response < ActiveRecord::Base
 	belongs_to :user
 
 	def current_response
-		puts "THE CHOICE ID IS"
-		p choice_id
-		puts "\n\n\n\n\n\n\n"
-
 		current_responses = Response.find_by_sql(<<-SQL
 			SELECT
 				user_responses.*

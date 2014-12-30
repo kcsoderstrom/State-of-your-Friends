@@ -3,9 +3,6 @@ class ResponsesController < ApplicationController
 		response_params[:choice_ids].each do |choice_id|
 			next unless choice_id.present?
 			response = Response.new(choice_id: choice_id, user_id: current_user.id)
-			puts "CHOICE ID OK"
-			p response.choice_id
-			p choice_id
 			response.displace_current_response
 		end
 		redirect_to survey_url

@@ -1,3 +1,5 @@
+# require 'net/http'
+
 class User < ActiveRecord::Base
   has_many :responses
 
@@ -16,6 +18,8 @@ class User < ActiveRecord::Base
       user.save
     end
 
+    user.facebook_token = options[:facebook_token]
+    user.save
     user
   end
 
@@ -34,6 +38,17 @@ class User < ActiveRecord::Base
   end
 
   def friends
+
+
+		# url = URI.parse('https://graph.facebook.com/me?fields=friends.limit(5000)')
+		# req = Net::HTTP::Get.new(url.to_s)
+		# res = Net::HTTP.start(url.host, url.port) {|http|
+		#   http.request(req)
+		# }
+		# res.body
+		# , {access_token: self.facebook_token, limit: 5000}
+  	# r = requests.request("GET", "https://graph.facebook.com/user/friends", )
+  	# r.contents
     graph = Koala::Facebook::API.new(self.facebook_token)
     graph.get_connections("me", "friends")
   end
