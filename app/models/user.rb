@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   has_many :responses
+  has_many :friendships
+  has_many :friends, through: :friendships, source: :friend
 
   after_initialize :ensure_session_token
   include BCrypt
@@ -12,11 +14,11 @@ class User < ActiveRecord::Base
       user.survey_id = 1
       #TODO: Set this based on friends' questions.
       #TODO: Add friends to the database using the User::friends method.
-      user.save
     end
 
     user.facebook_token = options[:facebook_token]
     user.save
+    user.add_friends
     user
   end
 
@@ -34,13 +36,15 @@ class User < ActiveRecord::Base
     self.profile.name
   end
 
-  def friends
-    graph = Koala::Facebook::API.new(self.facebook_token)
-    friend_info = graph.get_connections("me", "friends")
-    friend_info.map{ |info| User.find_by_uid(info["id"]) }
-    #TODO: You have a table to store this.
-    #      Update the table on sign-in.
-    #      Then you can just use an association.
+  def add_friends
+  	graph = Koala::Facebook::API.new(self.facebook_token)
+  	friend_info = graph.get_connections("me", "friends")
+  	friend_info.each do |info|
+  		friend = User.find_by_uid(info["id"])
+  		unless friends.include?(friend)
+  			friendships.create(friend_id: friend.id)
+  		end
+  	end
   end
 
   def survey

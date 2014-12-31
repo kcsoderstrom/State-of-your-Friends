@@ -5,5 +5,7 @@ class CreateQuestions < ActiveRecord::Migration
     	t.integer :survey_id
       t.timestamps
     end
+
+    add_index :survey_id
   end
 end
