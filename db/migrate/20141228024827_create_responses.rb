@@ -7,7 +7,7 @@ class CreateResponses < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :user_id
-    add_index :choice_id
+	  add_index :responses, :user_id
+	  add_index :responses, :choice_id
   end
 end
