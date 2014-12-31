@@ -2,12 +2,9 @@
 	<% @survey.each do |question| %>
 		<li><%= question.body %></li>
 		<ul>
-			<% @friends.each do |friend| %>
-				<li>
-					<% response = friend.response_for_question(question.id) %>
-					<%= response.nil? ? "" : response.body %>
-				</li>
-			<% end %>
+			<%= pie_chart question.responses.joins(:choice).group("choices.body").count,
+						width: "500px",
+						discrete: "true" %>
 		</ul>
 	<% end %>
 </ul>
