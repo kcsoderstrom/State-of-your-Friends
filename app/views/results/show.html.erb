@@ -2,9 +2,15 @@
 	<% @survey.each do |question| %>
 		<li><%= question.body %></li>
 		<ul>
-			<%= pie_chart question.responses.joins(:choice).group("choices.body").count,
+			<%= pie_chart current_user.friend_responses
+																.joins(:choice)
+																.where("choices.question_id = #{question.id}")
+																.group("choices.body")
+																.count,
 						width: "500px",
 						discrete: "true" %>
 		</ul>
 	<% end %>
 </ul>
+
+<!-- pie_chart Question.where(id: question.id).joins(:choices).joins(User.find(1).friend_responses).group("choices.body").count -->

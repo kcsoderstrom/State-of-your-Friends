@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_many :responses
   has_many :friendships
   has_many :friends, through: :friendships, source: :friend
+  has_many :friend_responses, through: :friends, source: :responses
 
   after_initialize :ensure_session_token
   include BCrypt
