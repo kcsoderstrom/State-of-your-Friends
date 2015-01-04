@@ -1,8 +1,13 @@
 class User < ActiveRecord::Base
   has_many :responses
   has_many :friendships
+  has_many :user_survey_questions
+  has_many :user_proposed_questions
   has_many :friends, through: :friendships, source: :friend
   has_many :friend_responses, through: :friends, source: :responses
+  has_many :survey_questions, through: :user_survey_questions, source: :question
+  has_many :proposed_questions, through: :user_proposed_questions, source: :question
+  has_many :suggested_questions, through: :friends, source: :proposed_questions
 
   after_initialize :ensure_session_token
   include BCrypt
@@ -12,15 +17,20 @@ class User < ActiveRecord::Base
 
     unless user
       user = User.new(options)
-      user.survey_id = 1
-      #TODO: Set this based on friends' questions.
-      #TODO: Add friends to the database using the User::friends method.
+      user.add_default_survey
     end
 
     user.facebook_token = options[:facebook_token]
     user.save
     user.add_friends
+    user.add_questions
     user
+  end
+
+  def add_default_survey
+    (1..5).each do |q_id|
+      self.user_survey_questions.new(question_id: q_id)
+    end
   end
 
   def self.generate_session_token
@@ -48,8 +58,20 @@ class User < ActiveRecord::Base
   	end
   end
 
+  def add_questions
+  	suggested_questions.each do |q|
+  		unless survey_questions.include?(q)
+  			user_survey_questions.create(question_id: q.id)
+  		end
+  	end
+  end
+
+  def add_proposed_question(question)
+  	user_proposed_questions.create(question_id: question.id)
+  end
+
   def survey
-  	Question.where(survey_id: survey_id)
+  	survey_questions.where("user_survey_questions.is_deleted = FALSE")
   end
 
   def response_for_question(question_id)

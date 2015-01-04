@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141231233159) do
+ActiveRecord::Schema.define(version: 20141231233151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,32 +25,12 @@ ActiveRecord::Schema.define(version: 20141231233159) do
 
   add_index "choices", ["question_id"], name: "index_choices_on_question_id", using: :btree
 
-  create_table "deleted_questions", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "question_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "deleted_questions", ["question_id"], name: "index_deleted_questions_on_question_id", using: :btree
-  add_index "deleted_questions", ["user_id"], name: "index_deleted_questions_on_user_id", using: :btree
-
   create_table "friendships", force: true do |t|
     t.integer  "user_id"
     t.integer  "friend_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "proposed_survey_questions", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "question_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "proposed_survey_questions", ["question_id"], name: "index_proposed_survey_questions_on_question_id", using: :btree
-  add_index "proposed_survey_questions", ["user_id"], name: "index_proposed_survey_questions_on_user_id", using: :btree
 
   create_table "questions", force: true do |t|
     t.text     "body"
@@ -66,15 +46,26 @@ ActiveRecord::Schema.define(version: 20141231233159) do
     t.datetime "updated_at"
   end
 
-  create_table "survey_questions", force: true do |t|
+  create_table "user_proposed_questions", force: true do |t|
     t.integer  "user_id"
     t.integer  "question_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "survey_questions", ["question_id"], name: "index_survey_questions_on_question_id", using: :btree
-  add_index "survey_questions", ["user_id"], name: "index_survey_questions_on_user_id", using: :btree
+  add_index "user_proposed_questions", ["question_id"], name: "index_user_proposed_questions_on_question_id", using: :btree
+  add_index "user_proposed_questions", ["user_id"], name: "index_user_proposed_questions_on_user_id", using: :btree
+
+  create_table "user_survey_questions", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "question_id"
+    t.boolean  "is_deleted",  default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_survey_questions", ["question_id"], name: "index_user_survey_questions_on_question_id", using: :btree
+  add_index "user_survey_questions", ["user_id"], name: "index_user_survey_questions_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email"
