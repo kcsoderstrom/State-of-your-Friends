@@ -1,10 +1,8 @@
-<% unless current_user.current_question_id
-	current_user.update_attribute(:current_question_id, 0)
+<% unless current_user.current_question_id  && current_user.current_question_id > 0
+	current_user.update_attribute(:current_question_id, 1)
 	end %>
 
-<%= current_user.current_question_id %>
-<%= @survey.first.id %>
-<% @survey.each do |question| %>
+	<% @survey.each do |question| %>
 	<form method="POST" action="<%= responses_url %>" class="<%= question.id == current_user.current_question_id ? '' : 'hidden' %>">
 		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 		<input type="hidden" name="response[choice_ids][]" value="">
