@@ -1,5 +1,9 @@
+<% unless current_user.current_question_id
+	current_user.update_attribute(:current_question_id, 0)
+	end %>
+
 <% @survey.each do |question| %>
-	<form method="POST" action="<%= responses_url %>">
+	<form method="POST" action="<%= responses_url %>" class="<%= question.id === current_user.current_question_id ? hidden : '' %>">
 		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 		<input type="hidden" name="response[choice_ids][]" value="">
 		<ul>
@@ -24,5 +28,6 @@
 <% end %>
 
 <script>
+// window.history.pushState(“object or string”, “Title”, “/new-url”);
 // TODO: Make only one question show up at a time
 </script>
