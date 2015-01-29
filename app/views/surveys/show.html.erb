@@ -1,9 +1,10 @@
-<form method="POST" action="<%= responses_url %>">
-	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-	<input type="hidden" name="response[choice_ids][]" value="">
-	<ul>
-		<% @survey.each do |question| %>
+<% @survey.each do |question| %>
+	<form method="POST" action="<%= responses_url %>">
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		<input type="hidden" name="response[choice_ids][]" value="">
+		<ul>
 			<li><%= h(question.body) %></li>
+			<li>
 				<ul>
 					<% question.choices.each do |choice| %>
 						<!-- TODO: THIS SHOULD BE CACHED!! -->
@@ -16,12 +17,12 @@
 						</li>
 					<% end %>
 				</ul>
-		<% end %>
-	</ul>
-
-	<button type="submit">Submit</button>
-</form>
+			</li>
+		</ul>
+		<button type="submit">Submit</button>
+	</form>
+<% end %>
 
 <script>
-// TODO: Make the checkboxes act like radio buttons
+// TODO: Make only one question show up at a time
 </script>
