@@ -3,7 +3,7 @@
 	end %>
 
 <% @survey.each do |question| %>
-	<form method="POST" action="<%= responses_url %>" class="<%= question.id === current_user.current_question_id ? hidden : '' %>">
+	<form method="POST" action="<%= responses_url %>" class="<%= question.id === current_user.current_question_id ? 'hidden' : '' %>">
 		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 		<input type="hidden" name="response[choice_ids][]" value="">
 		<ul>
