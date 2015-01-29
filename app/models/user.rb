@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   has_many :proposed_questions, through: :user_proposed_questions, source: :question
   has_many :suggested_questions, through: :friends, source: :proposed_questions
   has_one :current_question,
-    class_name: "Question"
+    class_name: "Question",
     foreign_key: :current_question_id
 
   after_initialize :ensure_session_token
