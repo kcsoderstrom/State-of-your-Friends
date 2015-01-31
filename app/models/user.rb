@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
 
   def decrement_current_question
     if previous_questions.count > 0
-      update_attribte(:current_question_id, prev_questions.last.id)
+      update_attribute(:current_question_id, prev_questions.last.id)
     else
       false
     end
@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
 
   def increment_current_question
     if next_questions.count > 0
-      update_attribte(:current_question_id, next_questions.first.id)
+      update_attribute(:current_question_id, next_questions.first.id)
     else
       false
     end
