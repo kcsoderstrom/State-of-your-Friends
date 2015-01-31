@@ -106,6 +106,15 @@ class User < ActiveRecord::Base
   	response.length > 0 ? response.first : nil
   end
 
+  def decrement_current_question
+    prev_questions = survey_questions.where("id < #{current_question_id}")
+    if prev_questions.count > 0
+      update_attribte(:current_question_id, prev_questions.first.id)
+    else
+      false
+    end
+  end
+
   private
   def ensure_session_token
     self.session_token ||= self.class.generate_session_token

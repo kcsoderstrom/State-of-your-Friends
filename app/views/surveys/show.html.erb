@@ -1,3 +1,5 @@
+<button id="back-button">Back</button>
+
 <% unless current_user.current_question_id  && current_user.current_question_id > 0
 	current_user.update_attribute(:current_question_id, 1)
 	end %>
@@ -27,7 +29,12 @@
 	</form>
 <% end %>
 
+<button id="skip-button">Skip</button>
+
 <script>
-// window.history.pushState(“object or string”, “Title”, “/new-url”);
-// TODO: Make only one question show up at a time
+	$("#back-button").on("click", function(event) {
+		event.preventDefault();
+		<% current_user.decrement_current_question %>
+		window.history.pushState("", "", “/1234”);
+	});
 </script>
