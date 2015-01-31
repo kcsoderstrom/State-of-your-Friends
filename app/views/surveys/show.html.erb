@@ -39,14 +39,14 @@
 		event.preventDefault();
 		<% current_user.decrement_current_question %>
 		window.history.pushState("", "", "/1234");
-		event.currentTarget.className = <%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>;
+		<%= "event.currentTarget.className = \"hidden\";" if current_user.previous_questions.count == 0 %>
 	});
 
 	document.getElementById("skip-button").addEventListener("click", function(event) {
 		event.preventDefault();
 		<% current_user.increment_current_question %>
 		window.history.pushState("", "", "/1234");
-		<%= "event.currentTarget.className = 'hidden';" if current_user.next_questions.count == 0 %>
+		<%= "event.currentTarget.className = \"hidden\";" if current_user.next_questions.count == 0 %>
 	});
 
 	// document.getElementById("delete-button").addEventListener("click", function(event) {
