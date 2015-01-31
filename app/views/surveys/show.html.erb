@@ -1,4 +1,4 @@
-<button class="<%= curret_user.previous_questions.count > 0 ? 'hidden' : '' %>" id="back-button">Back</button>
+<button class="<%= current_user.previous_questions.count > 0 ? 'hidden' : '' %>" id="back-button">Back</button>
 
 <% unless current_user.current_question_id  && current_user.current_question_id > 0
 	current_user.update_attribute(:current_question_id, 1)
