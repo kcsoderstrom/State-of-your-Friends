@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
 
   def decrement_current_question
     if previous_questions.count > 0
-      update_attribute(:current_question_id, prev_questions.last.id)
+      update_attribute(:current_question_id, previous_questions.last.id)
     else
       false
     end
