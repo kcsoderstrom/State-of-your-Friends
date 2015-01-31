@@ -107,12 +107,29 @@ class User < ActiveRecord::Base
   end
 
   def previous_questions
-    survey_questions.where("user_survey_questions.id < #{current_question_id}").where(is_deleted: false)
+    survey_questions.where("user_survey_questions.id < #{current_question_id}")
+                    .where("user_survey_questions.is_deleted = FALSE")
+                    .order_by("user_survey_questions.id")
   end
+
+  def next_questions
+    survey_questions.where("user_survey_questions.id > #{current_question_id}")
+                    .where("user_survey_questions.is_deleted = FALSE")
+                    .order_by("user_survey_questions.id")
+  end
+
 
   def decrement_current_question
     if previous_questions.count > 0
-      update_attribte(:current_question_id, prev_questions.first.id)
+      update_attribte(:current_question_id, prev_questions.last.id)
+    else
+      false
+    end
+  end
+
+  def increment_current_question
+    if next_questions.count > 0
+      update_attribte(:current_question_id, next_questions.first.id)
     else
       false
     end

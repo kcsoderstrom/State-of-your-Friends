@@ -40,4 +40,13 @@
 			event.currentTarget.className = "hidden";
 		<% end %>
 	});
+
+	document.getElementById("skip-button").addEventListener("click", function(event) {
+		event.preventDefault();
+		<% current_user.increment_current_question %>
+		window.history.pushState("", "", "/1234");
+		<% if current_user.next_questions.count == 0 %>
+			event.currentTarget.className = "hidden";
+		<% end %>
+	});
 </script>
