@@ -33,7 +33,7 @@
 <button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="skip-button">Skip</button>
 
 <script>
-console.log(<%= request.original_url %>);
+console.log(<%= request.path %>);
 
 	document.getElementById("back-button").addEventListener("click", function(event) {
 		event.preventDefault();
