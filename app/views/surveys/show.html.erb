@@ -1,4 +1,4 @@
-<button class="<%= current_user.previous_questions.count > 0 ? 'hidden' : '' %>" id="back-button">Back</button>
+<button class="<%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>" id="back-button">Back</button>
 
 <% unless current_user.current_question_id  && current_user.current_question_id > 0
 	current_user.update_attribute(:current_question_id, 1)
@@ -29,24 +29,30 @@
 	</form>
 <% end %>
 
-<button id="skip-button">Skip</button>
+<!-- <button id="delete-button">I don't want to see this question anymore.</button> -->
+<button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="skip-button">Skip</button>
 
 <script>
+console.log(<%= request.original_url %>);
+
 	document.getElementById("back-button").addEventListener("click", function(event) {
 		event.preventDefault();
 		<% current_user.decrement_current_question %>
 		window.history.pushState("", "", "/1234");
-		<% if current_user.previous_questions.count == 0 %>
-			event.currentTarget.className = "hidden";
-		<% end %>
+		event.currentTarget.className = <%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>;
 	});
 
 	document.getElementById("skip-button").addEventListener("click", function(event) {
 		event.preventDefault();
 		<% current_user.increment_current_question %>
 		window.history.pushState("", "", "/1234");
-		<% if current_user.next_questions.count == 0 %>
-			event.currentTarget.className = "hidden";
-		<% end %>
+		event.currentTarget.className = <%= current_user.next_questions.count == 0 ? 'hidden' : '' %>;
 	});
+
+	// document.getElementById("delete-button").addEventListener("click", function(event) {
+	// 	event.preventDefault();
+	// 	<% current_user.delete_current_question %>
+	// 	window.history.pushState("", "", "/1234");
+	// 	event.currentTarget.className = <%= current_user.next_questions.count == 0 ? 'hidden' : '' %>;
+	// });
 </script>
