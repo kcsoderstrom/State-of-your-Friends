@@ -32,7 +32,7 @@
 <button id="skip-button">Skip</button>
 
 <script>
-	$("#back-button").on("click", function(event) {
+	document.getElementById("back-button").addEventListener("click", function(event) {
 		event.preventDefault();
 		<% current_user.decrement_current_question %>
 		window.history.pushState("", "", "/1234");
