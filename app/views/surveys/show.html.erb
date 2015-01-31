@@ -38,14 +38,14 @@
 	document.getElementById("back-button").addEventListener("click", function(event) {
 		event.preventDefault();
 		<% current_user.decrement_current_question %>
-		window.history.pushState("", "", "/1234");
+		window.history.pushState("", "", "/survey/<%= current_user.current_question_id %>");
 		event.currentTarget.className = "<%= current_user.previous_questions.count == 0 ? 'hidden' : ' '%>";
 	});
 
 	document.getElementById("skip-button").addEventListener("click", function(event) {
 		event.preventDefault();
 		<% current_user.increment_current_question %>
-		window.history.pushState("", "", "/1234");
+		window.history.pushState("", "", "/survey/<%= current_user.current_question_id %>");
 		event.currentTarget.className = "<%= current_user.next_questions.count == 0 ? 'hidden' : ' '%>";
 	});
 
