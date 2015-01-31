@@ -109,13 +109,13 @@ class User < ActiveRecord::Base
   def previous_questions
     survey_questions.where("user_survey_questions.id < #{current_question_id}")
                     .where("user_survey_questions.is_deleted = FALSE")
-                    .order_by("user_survey_questions.id")
+                    .order("user_survey_questions.id")
   end
 
   def next_questions
     survey_questions.where("user_survey_questions.id > #{current_question_id}")
                     .where("user_survey_questions.is_deleted = FALSE")
-                    .order_by("user_survey_questions.id")
+                    .order("user_survey_questions.id")
   end
 
 
