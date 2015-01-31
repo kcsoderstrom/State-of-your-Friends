@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
   end
 
   def decrement_current_question
-    prev_questions = survey_questions.where("id < #{current_question_id}")
+    prev_questions = survey_questions.where("user_survey_questions.id < #{current_question_id}")
     if prev_questions.count > 0
       update_attribte(:current_question_id, prev_questions.first.id)
     else
