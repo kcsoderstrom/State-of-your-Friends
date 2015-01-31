@@ -135,16 +135,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_current_question_from_url(url)
-    new_question_id = url[7..-1]
-    if new_question_id.length > 0
-      new_question_id = new_question_id.to_i
-      new_question = survey_questions.where("user_survey_questions.id = #{new_question_id}")
-                                     .where("user_survey_questions.is_deleted = FALSE")
-      update_attribute(:current_question_id, new_question.first.id) if new_question.count > 0
-    end
-  end
-
   private
   def ensure_session_token
     self.session_token ||= self.class.generate_session_token
