@@ -5,7 +5,11 @@
 	end %>
 
 <% @survey.each do |question| %>
-	<form method="POST" action="<%= responses_url %>" class="<%= question.id == current_user.current_question_id ? '' : 'hidden' %>">
+	<form method="POST"
+				data-question-id="<%= question.id %>"
+				action="<%= responses_url %>"
+				class="<%= question.id == current_user.current_question_id ?
+																	'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
 		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 		<input type="hidden" name="response[choice_ids][]" value="">
 		<ul>
@@ -33,21 +37,40 @@
 <button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="skip-button">Skip</button>
 
 <script>
-	console.log(<%= current_user.current_question_id %>);
+	(function() {
+		var $leftForm = $("form.left")[0];
+		if(!$leftForm) {
+			return;
+		}
 
-	document.getElementById("back-button").addEventListener("click", function(event) {
-		event.preventDefault();
-		<% current_user.decrement_current_question %>
-		window.history.pushState("", "", "/survey/<%= current_user.current_question_id %>");
-		event.currentTarget.className = "<%= current_user.previous_questions.count == 0 ? 'hidden' : ' '%>";
-	});
+		var currentForm = document.getElementsByClassName("active")[0];
+		var allForms = document.getElementsByTagName("form");
 
-	document.getElementById("skip-button").addEventListener("click", function(event) {
-		event.preventDefault();
-		<% current_user.increment_current_question %>
-		window.history.pushState("", "", "/survey/<%= current_user.current_question_id %>");
-		event.currentTarget.className = "<%= current_user.next_questions.count == 0 ? 'hidden' : ' '%>";
-	});
+		document.getElementById("back-button").addEventListener("click", function(event) {
+			event.preventDefault();
+			$.ajax({
+				url: <%= users_url(current_user) %>,
+				type: "PATCH",
+				data: {
+					current_question_id: $leftForm.data("question-id")
+				},
+				success: function(data) {
+					window.history.pushState("", "", "/survey/" + data.current_question_id);
+					event.currentTarget.className = "<%= current_user.previous_questions.count == 0 ? 'hidden' : ' '%>";
+					// todo: that doesn't work
+				}
+			});
+
+		});
+
+		document.getElementById("skip-button").addEventListener("click", function(event) {
+			event.preventDefault();
+			<% current_user.increment_current_question %>
+			window.history.pushState("", "", "/survey/<%= current_user.current_question_id %>");
+			event.currentTarget.className = "<%= current_user.next_questions.count == 0 ? 'hidden' : ' '%>";
+		});
+
+	})();
 
 	// document.getElementById("delete-button").addEventListener("click", function(event) {
 	// 	event.preventDefault();
