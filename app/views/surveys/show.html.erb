@@ -49,7 +49,7 @@
 		document.getElementById("back-button").addEventListener("click", function(event) {
 			event.preventDefault();
 			$.ajax({
-				url: <%= users_url(current_user) %>,
+				url: <%= user_url(current_user) %>,
 				type: "PATCH",
 				data: {
 					current_question_id: $leftForm.data("question-id")

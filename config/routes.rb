@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   get '/survey/:id', to: 'surveys#swap_current_question'
   resource :session, only: [:create, :destroy]
   resources :responses, only: [:create]
+  resources :users, only: [:update]
 end
