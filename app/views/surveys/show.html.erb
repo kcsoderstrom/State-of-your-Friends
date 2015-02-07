@@ -49,15 +49,14 @@
 		document.getElementById("back-button").addEventListener("click", function(event) {
 			event.preventDefault();
 			$.ajax({
-				url: <%= user_url(current_user) %>,
+				url: "<%= user_url(current_user) %>",
 				type: "PATCH",
 				data: {
 					current_question_id: $leftForm.data("question-id")
 				},
 				success: function(data) {
 					window.history.pushState("", "", "/survey/" + data.current_question_id);
-					event.currentTarget.className = "<%= current_user.previous_questions.count == 0 ? 'hidden' : ' '%>";
-					// todo: that doesn't work
+					event.currentTarget.className = data.previous_question_count ? '' : 'hidden';
 				}
 			});
 
