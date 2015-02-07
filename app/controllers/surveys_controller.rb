@@ -2,7 +2,7 @@ class SurveysController < ApplicationController
 	before_action :require_current_user
 
 	def show
-		redirect_to survey_url(current_user.current_question_id)
+		redirect_to survey_question_url(current_user.current_question_id)
 	end
 
 	def swap_current_question

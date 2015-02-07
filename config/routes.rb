@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get '/auth/facebook/callback', to: 'oauth_callbacks#facebook'
   resource :result, only: [:show, :create]
   resource :survey, only: [:show]
-  get '/survey/:id', to: 'surveys#swap_current_question'
+  get '/survey/:id', to: 'surveys#swap_current_question', as: "survey_question"
   resource :session, only: [:create, :destroy]
   resources :responses, only: [:create]
   resources :users, only: [:update]
