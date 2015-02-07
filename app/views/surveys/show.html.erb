@@ -38,38 +38,67 @@
 
 <script>
 	(function() {
-		var $leftForm = $("form.left")[0];
-		if(!$leftForm) {
-			return;
-		}
-
 		var currentForm = document.getElementsByClassName("active")[0];
 		var allForms = document.getElementsByTagName("form");
 
 		document.getElementById("back-button").addEventListener("click", function(event) {
 			event.preventDefault();
-			$.ajax({
-				url: "<%= user_url(current_user) %>",
-				type: "PATCH",
-				data: {
-					current_question_id: $leftForm.data("question-id")
-				},
-				success: function(data) {
-					window.history.pushState("", "", "/survey/" + data.current_question_id);
-					event.currentTarget.className = data.previous_question_count ? '' : 'hidden';
-				}
-			});
+
+			var leftForms = document.getElementsByClassName("left")
+			var leftForm = leftForms[leftForms.length - 1];
+			if(!leftForm) {
+				return;
+			}
+			
+			var xhr = new XMLHttpRequest();
+			xhr.open('PATCH', "<%= user_url(current_user) %>", true);
+		  xhr.onload = function(event) {
+		    if (xhr.status === 200) {
+		    	console.log(xhr, event);
+		    }
+		  };
+
+					// window.history.pushState("", "", "/survey/" + data.current_question_id);
+					// event.currentTarget.className = data.previous_question_count ? '' : 'hidden';
+
+		    // } else {
+		    //   oOutput.innerHTML = "Error " + oReq.status + " occurred uploading your file.<br \/>";
+		  xhr.send({current_question_id: leftForm.getAttribute("data-question-id")});
+			// $.ajax({
+			// 	url: ,
+			// 	type: "PATCH",
+			// 	data: {
+					
+			// 	},
+			// 	success: function(data) {
+
+			// 	}
+			// });
 
 		});
 
-		document.getElementById("skip-button").addEventListener("click", function(event) {
-			event.preventDefault();
-			<% current_user.increment_current_question %>
-			window.history.pushState("", "", "/survey/<%= current_user.current_question_id %>");
-			event.currentTarget.className = "<%= current_user.next_questions.count == 0 ? 'hidden' : ' '%>";
-		});
+	// 	document.getElementById("skip-button").addEventListener("click", function(event) {
+	// 		event.preventDefault();
 
-	})();
+	// 		var $rightForm = $("form.right")[0];
+	// 		if(!$rightForm) {
+	// 			return;
+	// 		}
+
+	// 		$.ajax({
+	// 			url: "<%= user_url(current_user) %>",
+	// 			type: "PATCH",
+	// 			data: {
+	// 				current_question_id: $leftForm.data("question-id")
+	// 			},
+	// 			success: function(data) {
+	// 				window.history.pushState("", "", "/survey/" + data.current_question_id);
+	// 				event.currentTarget.className = data.next_question_count ? '' : 'hidden';
+	// 			}
+	// 		});
+	// 	});
+
+	// })();
 
 	// document.getElementById("delete-button").addEventListener("click", function(event) {
 	// 	event.preventDefault();
