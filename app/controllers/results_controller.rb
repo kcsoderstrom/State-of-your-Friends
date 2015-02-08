@@ -3,7 +3,7 @@ class ResultsController < ApplicationController
 
 	def show
 		if(params[:id])
-			@user = User.find(:id)
+			@user = User.find(params[:id])
 			@survey = @user.survey
 			@friends = @user.friends
 			render :show
