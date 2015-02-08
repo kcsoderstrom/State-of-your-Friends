@@ -68,6 +68,8 @@
 		window.addEventListener('popstate', function(event) {
 			var keys = document.location.href.split("/");
 			var id = parseInt(keys[keys.length - 1]);
+			console.log(id);
+			
 			var forms = document.getElementsByTagName("form");
 			for(var idx in forms) {
 				if(!parseInt(idx)) {
