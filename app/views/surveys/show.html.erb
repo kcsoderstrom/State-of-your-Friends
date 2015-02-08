@@ -68,8 +68,13 @@
 		window.addEventListener('popstate', function(event) {
 			var keys = document.location.href.split("/");
 			var id = parseInt(keys[keys.length - 1]);
+			var forms = document.getElementsByTagName("form");
+			for(var idx in forms) {
+				if(!parseInt(idx)) {
+					return;
+				}
 
-			document.getElementsByTagName("form").forEach(function(form) {
+				var from = forms[idx];
 				var formId = parseInt(form.getAttribute("data-question-id"));
 				if(formId < id) {
 					form.className = "left hidden";
