@@ -89,6 +89,7 @@
 
 			var xhr = new XMLHttpRequest();
 			xhr.open('PATCH', "<%= user_url(current_user) %>?deleted_question_id=" + form.getAttribute("data-question-id"), true);
+			console.log(xhr);
 			xhr.setRequestHeader('X-CSRF-Token', "<%= form_authenticity_token %>");
 		  xhr.onload = function(event) {
 		    if (xhr.status === 200) {
