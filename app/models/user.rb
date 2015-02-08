@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def delete_question(unwanted_question_id)
+  def delete_question_from_survey(unwanted_question_id)
     return false unless unwanted_question_id
     success = user_survey_questions.where(question_id: unwanted_question_id)
                          .update(is_deleted: true)
