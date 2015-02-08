@@ -35,7 +35,7 @@
 <% end %>
 
 <!-- <button id="delete-button">I don't want to see this question anymore.</button> -->
-<button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="skip-button">Skip</button>
+<button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
 
 <script>
 	(function() {
@@ -59,7 +59,7 @@
 		    	var res = JSON.parse(xhr.response);
 					window.history.pushState("", "", "/survey/" + res.current_question_id);
 					event.currentTarget.className = res.previous_question_count ? '' : 'hidden';
-					document.getElementById("skip-button").className = res.next_question_count ? '' : 'hidden';
+					document.getElementById("next-button").className = res.next_question_count ? '' : 'hidden';
 					document.getElementsByClassName("active")[0].className = "right hidden";
 					leftForm.className = "active";
 		    }
@@ -68,7 +68,7 @@
 		  xhr.send();
 		});
 
-		document.getElementById("skip-button").addEventListener("click", function(event) {
+		document.getElementById("next-button").addEventListener("click", function(event) {
 			var rightForms = document.getElementsByClassName("right")
 			var rightForm = rightForms[0];
 			if(!rightForm) {
