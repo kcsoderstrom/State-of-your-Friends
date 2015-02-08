@@ -141,9 +141,10 @@ class User < ActiveRecord::Base
                          .update_all(is_deleted: true)
     if success
       # I don't like double-pinging the database.
-      if previous_questions.count
+      # Leaving this for now because it is less verbose than the alternative.
+      if previous_questions.count > 0
         update_attribute(:current_question_id, previous_questions.last.id)
-      elsif next_questions.count
+      elsif next_questions.count > 0
         update_attribute(:current_question_id, next_questions.first.id)
       else
         update_attribute(:current_question_id, nil)
