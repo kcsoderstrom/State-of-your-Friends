@@ -5,7 +5,8 @@
 	end %>
 
 <% @survey.each do |question| %>
-	<form class="<%= question.id == current_user.current_question_id ?
+	<form data-question-id="<%= question.id %>"
+				class="<%= question.id == current_user.current_question_id ?
 								'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
 		<h2><%= h(question.body) %></h2>
 		<ul>
