@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   def delete_question_from_survey(unwanted_question_id)
     return false unless unwanted_question_id
     success = user_survey_questions.where(question_id: unwanted_question_id)
-                         .update_attribute(:is_deleted, true)
+                         .update_all(is_deleted: true)
     if success
       # I don't like double-pinging the database.
       if previous_questions.count
