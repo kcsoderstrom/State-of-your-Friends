@@ -11,7 +11,6 @@
 				class="<%= question.id == current_user.current_question_id ?
 																	'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
 		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-		<input type="hidden" name="response[choice_ids][]" value="">
 		<ul>
 			<li><%= h(question.body) %></li>
 			<li>
@@ -19,8 +18,8 @@
 					<% question.choices.each do |choice| %>
 						<!-- TODO: THIS SHOULD BE CACHED!! -->
 						<li>
-							<input type="checkbox"
-										 name="response[choice_ids][]"
+							<input type="radio"
+										 name="response[choice_id]"
 										 value="<%= choice.id %>"
 										 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
 							<%= h(choice.body) %>
@@ -29,7 +28,7 @@
 				</ul>
 			</li>
 		</ul>
-		<button type="submit">Submit</button>
+		<!-- <button type="submit">Submit</button> -->
 	</form>
 <% end %>
 
@@ -80,11 +79,30 @@
 		    if (xhr.status === 200) {
 		    	var res = JSON.parse(xhr.response);
 					window.history.pushState("", "", "/survey/" + res.current_question_id);
-					event.currentTarget.className = res.previous_question_count ? '' : 'hidden';
+					event.currentTarget.className = res.next_question_count ? '' : 'hidden';
 					document.getElementsByClassName("active")[0].className = "left hidden";
 					rightForm.className = "active";
 		    }
 		  };
+
+		  xhr.send();
+		});
+
+		document.getElementsByTagName("input").addEventListener("click", function(event) {
+			var choiceId = event.currentTarget.value;
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', "<%= responses_url %>?choice_id=" + choiceId);
+			xhr.setRequestHeader('X-CSRF-Token', "<%= form_authenticity_token %>");
+		  // xhr.onload = function(event) {
+		  //   if (xhr.status === 200) {
+		  //   	var res = JSON.parse(xhr.response);
+				// 	window.history.pushState("", "", "/survey/" + res.current_question_id);
+				// 	event.currentTarget.className = res.next_question_count ? '' : 'hidden';
+				// 	document.getElementsByClassName("active")[0].className = "left hidden";
+				// 	rightForm.className = "active";
+		  //   }
+		  // };
 
 		  xhr.send();
 		});
