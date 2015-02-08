@@ -59,6 +59,8 @@
 		    	var res = JSON.parse(xhr.response);
 					window.history.pushState("", "", "/survey/" + res.current_question_id);
 					event.currentTarget.className = res.previous_question_count ? '' : 'hidden';
+					document.getElementsByTagName("active").className = "right hidden";
+					leftForm.className = "active";
 		    }
 		  };
 
