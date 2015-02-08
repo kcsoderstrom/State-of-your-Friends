@@ -29,7 +29,6 @@
 <button id="delete-button">I don't want to see this question anymore.</button>
 <button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
 
-<a href="<%= result_url %>" class="<%= current_user.next_question_count > 0 ? 'hidden' : ''%>" id="link-to-results">View results</a>
 
 <script>
 	(function() {
@@ -82,11 +81,11 @@
 					document.getElementsByClassName("active")[0].className = dir + " hidden";
 					newForm.className = "active";
 
-					if(!res.next_question_count) {
-						document.getElementById("link-to-results").className = "";
-					} else {
-						document.getElementById("link-to-results").className = "hidden";
-					}
+					// if(!res.next_question_count) {
+					// 	document.getElementById("link-to-results").className = "";
+					// } else {
+					// 	document.getElementById("link-to-results").className = "hidden";
+					// }
 		    }
 		  };
 
@@ -124,11 +123,11 @@
 							console.log("There are no remaining questions.");
 						}
 
-						if(!res.next_question_count) {
-							document.getElementById("link-to-results").className = "";
-						} else {
-							document.getElementById("link-to-results").className = "hidden";
-						}
+						// if(!res.next_question_count) {
+						// 	document.getElementById("link-to-results").className = "";
+						// } else {
+						// 	document.getElementById("link-to-results").className = "hidden";
+						// }
 					}
 		    }
 		  };
