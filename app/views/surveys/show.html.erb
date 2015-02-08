@@ -73,7 +73,7 @@
 			var forms = document.getElementsByTagName("form");
 			for(var idx in forms) {
 				if(!parseInt(idx)) {
-					return;
+					continue;
 				}
 
 				var from = forms[idx];
@@ -81,11 +81,11 @@
 				var formId = parseInt(form.getAttribute("data-question-id"));
 				if(formId < id) {
 					form.className = "left hidden";
-					return;
+					continue;
 				}
 				if(formId > id) {
 					form.className = "right hidden";
-					return;
+					continue;
 				}
 
 				form.className = "active";
