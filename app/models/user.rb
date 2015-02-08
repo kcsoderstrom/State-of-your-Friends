@@ -135,6 +135,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  def delete_question(unwanted_question_id)
+    return false unless unwanted_question_id
+    success = user_survey_questions.where(question_id: unwanted_question_id)
+                         .update(is_deleted: true)
+    if success
+      # I don't like double-pinging the database.
+      if previous_questions.count
+        update_attribute(:current_question_id, previous_questions.last.id)
+      elsif next_questions.count
+        update_attribute(:current_question_id, next_questions.first.id)
+      else
+        update_attribute(:current_question_id, nil)
+      end
+    end
+
+    success
+  end
+
   private
   def ensure_session_token
     self.session_token ||= self.class.generate_session_token

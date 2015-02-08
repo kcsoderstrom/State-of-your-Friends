@@ -5,36 +5,27 @@
 	end %>
 
 <% @survey.each do |question| %>
-	<form method="POST"
-				data-question-id="<%= question.id %>"
-				action="<%= responses_url %>"
-				class="<%= question.id == current_user.current_question_id ?
-																	'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
-		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<form class="<%= question.id == current_user.current_question_id ?
+								'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
+		<h2><%= h(question.body) %></h2>
 		<ul>
-			<li><%= h(question.body) %></li>
-			<li>
-				<ul>
-					<% question.choices.each do |choice| %>
-						<!-- TODO: THIS SHOULD BE CACHED!! -->
-						<li>
-							<label>
-								<input type="radio"
-											 name="response[choice_id]"
-											 value="<%= choice.id %>"
-											 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
-								<%= h(choice.body) %>
-							</label>
-						</li>
-					<% end %>
-				</ul>
-			</li>
+			<% question.choices.each do |choice| %>
+				<!-- TODO: THIS SHOULD BE CACHED!! -->
+				<li>
+					<label>
+						<input type="radio"
+									 name="response[choice_id]"
+									 value="<%= choice.id %>"
+									 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
+						<%= h(choice.body) %>
+					</label>
+				</li>
+			<% end %>
 		</ul>
-		<!-- <button type="submit">Submit</button> -->
 	</form>
 <% end %>
 
-<!-- <button id="delete-button">I don't want to see this question anymore.</button> -->
+<button id="delete-button">I don't want to see this question anymore.</button>
 <button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
 
 <script>
@@ -71,6 +62,10 @@
 		  }
 		});
 
+		window.addEventListener('popstate', function(event) {
+			console.log(event);
+		});
+
 		var updateCurrentQuestionId = function(newForm, dir) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('PATCH', "<%= user_url(current_user) %>?current_question_id=" + newForm.getAttribute("data-question-id"), true);
@@ -89,12 +84,43 @@
 		  xhr.send();
 		}
 
+		document.getElementById("delete-button").addEventListener("click", function(event) {
+			var form = document.getElementsByClassName("active")[0];
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('PATCH', "<%= user_url(current_user) %>?deleted_question_id=" + form.getAttribute("data-question-id"), true);
+			xhr.setRequestHeader('X-CSRF-Token', "<%= form_authenticity_token %>");
+		  xhr.onload = function(event) {
+		    if (xhr.status === 200) {
+		    	var res = JSON.parse(xhr.response);
+					window.history.pushState("", "", "/survey/" + res.current_question_id);
+					document.getElementById("next-button").className = res.next_question_count ? '' : 'hidden';
+					document.getElementById("back-button").className = res.previous_question_count ? '' : 'hidden';
+					form.parentNode.removeChild(form);
+
+					// Display the new current question.
+					// There is probably a better way to do this.
+					var leftForms = document.getElementsByClassName("left")
+					var leftForm = leftForms[leftForms.length - 1];
+					if(leftForm) {
+						newForm = leftForm;
+						leftForm.className = "active";
+					} else {
+						var rightForms = document.getElementsByClassName("right");
+						rightForm = rightForms[0];
+						if(rightForm) {
+							rightForm.className = "active";
+						} else {
+							// TODO: Do something with the blank page that's left.
+							console.log("There are no remaining questions.");
+						}
+					}
+		    }
+		  };
+
+		  xhr.send();
+		}
+		});
 	})();
 
-	// document.getElementById("delete-button").addEventListener("click", function(event) {
-	// 	event.preventDefault();
-	// 	<#% current_user.delete_current_question %>
-	// 	window.history.pushState("", "", "/1234");
-	// 	event.currentTarget.className = <%= current_user.next_questions.count == 0 ? 'hidden' : '' %>;
-	// });
 </script>
