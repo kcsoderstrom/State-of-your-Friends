@@ -29,7 +29,7 @@
 <button id="delete-button">I don't want to see this question anymore.</button>
 <button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
 
-
+<a href="<%= result_url %>" class="<%= current_user.next_question_count > 0 ? 'hidden' : ''%>" id="link-to-results">View results</a>
 
 <script>
 	(function() {
@@ -83,9 +83,9 @@
 					newForm.className = "active";
 
 					if(!res.next_question_count) {
-						document.getElementById("results-link").className = "";
+						document.getElementById("link-to-results").className = "";
 					} else {
-						document.getElementById("results-link").className = "hidden";
+						document.getElementById("link-to-results").className = "hidden";
 					}
 		    }
 		  };
@@ -125,9 +125,9 @@
 						}
 
 						if(!res.next_question_count) {
-							document.getElementById("results-link").className = "";
+							document.getElementById("link-to-results").className = "";
 						} else {
-							document.getElementById("results-link").className = "hidden";
+							document.getElementById("link-to-results").className = "hidden";
 						}
 					}
 		    }
