@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 	def update
 		@user = current_user
-		if @user.update(params[:current_question_id])
+		if @user.update(params.permit(:current_question_id))
 			render json: { current_question_id: @user.curent_question_id,
 										 previous_question_count: @user.previous_questions.count,
 										 next_question_count: @user.next_questions.count }

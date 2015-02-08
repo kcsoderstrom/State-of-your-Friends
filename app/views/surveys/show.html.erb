@@ -64,7 +64,7 @@
 
 		    // } else {
 		    //   oOutput.innerHTML = "Error " + oReq.status + " occurred uploading your file.<br \/>";
-		  xhr.send({current_question_id: leftForm.getAttribute("data-question-id")});
+		  xhr.send("current_question_id=" + leftForm.getAttribute("data-question-id"));
 			// $.ajax({
 			// 	url: ,
 			// 	type: "PATCH",
