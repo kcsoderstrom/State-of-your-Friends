@@ -66,7 +66,7 @@
 		});
 
 		window.addEventListener('popstate', function(event) {
-			var keys = document.location.split("/");
+			var keys = document.location.href.split("/");
 			var id = parseInt(keys[keys.length - 1]);
 
 			document.getElementsByTagName("form").forEach(function(form) {
@@ -81,7 +81,7 @@
 				}
 
 				form.className = "active";
-			})
+			});
 		});
 
 		var updateCurrentQuestionId = function(newForm, dir) {
