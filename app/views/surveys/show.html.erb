@@ -29,7 +29,6 @@
 <button id="delete-button">I don't want to see this question anymore.</button>
 <button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
 
-
 <script>
 	(function() {
 		var currentForm = document.getElementsByClassName("active")[0];
@@ -80,12 +79,6 @@
 					document.getElementById("back-button").className = res.previous_question_count ? '' : 'hidden';
 					document.getElementsByClassName("active")[0].className = dir + " hidden";
 					newForm.className = "active";
-
-					// if(!res.next_question_count) {
-					// 	document.getElementById("link-to-results").className = "";
-					// } else {
-					// 	document.getElementById("link-to-results").className = "hidden";
-					// }
 		    }
 		  };
 
@@ -122,12 +115,6 @@
 							// TODO: Do something with the blank page that's left.
 							console.log("There are no remaining questions.");
 						}
-
-						// if(!res.next_question_count) {
-						// 	document.getElementById("link-to-results").className = "";
-						// } else {
-						// 	document.getElementById("link-to-results").className = "hidden";
-						// }
 					}
 		    }
 		  };
