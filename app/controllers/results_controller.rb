@@ -8,7 +8,7 @@ class ResultsController < ApplicationController
 			@friends = @user.friends
 			render :show
 		else
-			redirect_to results_url(current_user)
+			redirect_to user_result_url(current_user)
 		end
 	end
 
