@@ -18,11 +18,13 @@
 					<% question.choices.each do |choice| %>
 						<!-- TODO: THIS SHOULD BE CACHED!! -->
 						<li>
-							<input type="radio"
-										 name="response[choice_id]"
-										 value="<%= choice.id %>"
-										 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
-							<%= h(choice.body) %>
+							<label>
+								<input type="radio"
+											 name="response[choice_id]"
+											 value="<%= choice.id %>"
+											 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
+								<%= h(choice.body) %>
+							</label>
 						</li>
 					<% end %>
 				</ul>
@@ -91,8 +93,8 @@
 		});
 
 		document.addEventListener("click", function(event) {
-			if(event.currentTarget.tagName === "INPUT") {
-				var choiceId = event.currentTarget.value;
+			if(event.target.tagName === "INPUT") {
+				var choiceId = event.target.value;
 
 				var xhr = new XMLHttpRequest();
 				xhr.open('POST', "<%= responses_url %>?choice_id=" + choiceId);
