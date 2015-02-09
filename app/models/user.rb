@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :suggested_questions, through: :friends, source: :proposed_questions
   belongs_to :current_question,
     class_name: "Question",
-    foregin_key: :current_question_id
+    foreign_key: :current_question_id
 
   after_initialize :ensure_session_token
   include BCrypt
