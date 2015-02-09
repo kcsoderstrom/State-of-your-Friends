@@ -2,6 +2,7 @@ class SurveysController < ApplicationController
 	before_action :require_current_user
 
 	def show
+		current_user.update_attribute(:current_question_id, 1) unless !current_user.current_question_id
 		redirect_to survey_question_url(current_user.current_question_id)
 	end
 
