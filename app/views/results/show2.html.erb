@@ -1,0 +1,199 @@
+<div id="main" class="group">
+	<button class="<%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>" id="back-button">Back</button>
+	<button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
+	<a href="<%= result_url %>" class="<%= current_user.next_questions.count > 0 ? 'hidden' : ''%>" id="results-link">View results</a>
+	<% unless current_user.current_question_id  && current_user.current_question_id > 0
+		current_user.update_attribute(:current_question_id, 1)
+		end %>
+
+	<% @survey.each do |question| %>
+		<form data-question-id="<%= question.id %>"
+					class="<%= question.id == current_user.current_question_id ?
+									'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
+			<h2><%= h(question.body) %></h2>
+			<ul>
+				<% question.choices.each do |choice| %>
+					<!-- TODO: THIS SHOULD BE CACHED!! -->
+					<li class="group">
+						<div class="input-container">
+							<input type="radio"
+										 name="response[choice_id]"
+										 value="<%= choice.id %>"
+										 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
+						</div>			 
+						<label>
+							<%= h(choice.body) %>
+						</label>
+					</li>
+				<% end %>
+			</ul>
+		</form>
+	<% end %>
+	<div id="lower-buttons">
+		<button id="delete-button">I don't want to see this question anymore.</button>
+	</div>
+</div>
+<script>
+	document.addEventListener("DOMContentLoaded", function(event) {
+	  var forms = document.getElementsByTagName("form");
+
+	  function changeChecked(inputs) {
+	  	for (var i = 0; i < inputs.length; i++) {
+	  		inputs[i].checked = false;
+	  		var inputContainerList = inputs[i].parentNode.classList;
+
+	  		if (inputContainerList.contains("background")) {
+	  			inputContainerList.remove("background");
+	  		}
+	  	}
+	  }
+
+	  function	changeInputColor(inputContainers, event){
+  		if (event.target.className.indexOf("input-container") !== -1){
+  			changeChecked(inputContainers);
+  			event.target.classList.add("background");
+  			event.target.getElementsByTagName("input")[0].checked = true
+  		}
+	  }
+
+	  function addChangeInputColor(){
+		  for (var i = 0; i < forms.length; i++) {
+		  	forms[i].addEventListener("click", function(event) {
+		  	var inputContainers = event.currentTarget.getElementsByTagName("input");
+		  	changeInputColor(inputContainers, event);
+		  	});
+		  }
+		}
+
+		addChangeInputColor();
+
+	});
+	
+	(function() {
+		var currentForm = document.getElementsByClassName("active")[0];
+		var allForms = document.getElementsByTagName("form");
+
+		document.getElementById("back-button").addEventListener("click", function(event) {
+			var leftForms = document.getElementsByClassName("left")
+			var leftForm = leftForms[leftForms.length - 1];
+			
+			if(leftForm) {
+				updateCurrentQuestionId(leftForm, "right");
+			}
+		});
+
+		document.getElementById("next-button").addEventListener("click", function(event) {
+			var rightForms = document.getElementsByClassName("right")
+			var rightForm = rightForms[0];
+
+			if(rightForm) {
+				updateCurrentQuestionId(rightForm, "left");
+			}
+		});
+
+		document.addEventListener("click", function(event) {
+			if(event.target.tagName === "INPUT") {
+				var choiceId = event.target.value;
+
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', "<%= responses_url %>?choice_id=" + choiceId);
+				xhr.setRequestHeader('X-CSRF-Token', "<%= form_authenticity_token %>");
+			  xhr.send();
+		  }
+		});
+
+		window.addEventListener('popstate', function(event) {
+			var keys = document.location.href.split("/");
+			var id = parseInt(keys[keys.length - 1]);
+
+			var forms = document.getElementsByTagName("form");
+			for(var idx in forms) {
+				if(!parseInt(idx)) {
+					continue;
+				}
+
+				var form = forms[idx];
+				var formId = parseInt(form.getAttribute("data-question-id"));
+				if(formId < id) {
+					form.className = "left hidden";
+					continue;
+				}
+				if(formId > id) {
+					form.className = "right hidden";
+					continue;
+				}
+
+				form.className = "active";
+			}
+		});
+
+		var updateCurrentQuestionId = function(newForm, dir) {
+			var xhr = new XMLHttpRequest();
+			xhr.open('PATCH', "<%= user_url(current_user) %>?current_question_id=" + newForm.getAttribute("data-question-id"), true);
+			xhr.setRequestHeader('X-CSRF-Token', "<%= form_authenticity_token %>");
+		  xhr.onload = function(event) {
+		    if (xhr.status === 200) {
+		    	var res = JSON.parse(xhr.response);
+					window.history.pushState("", "", "/survey/" + res.current_question_id);
+					document.getElementById("next-button").className = res.next_question_count ? '' : 'hidden';
+					document.getElementById("back-button").className = res.previous_question_count ? '' : 'hidden';
+					document.getElementsByClassName("active")[0].className = dir + " hidden";
+					newForm.className = "active";
+
+					if(!res.next_question_count) {
+						document.getElementById("results-link").className = "";
+					} else {
+						document.getElementById("results-link").className = "hidden";
+					}
+		    }
+		  };
+
+		  xhr.send();
+		}
+
+		document.getElementById("delete-button").addEventListener("click", function(event) {
+			var form = document.getElementsByClassName("active")[0];
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('PATCH', "<%= user_url(current_user) %>?deleted_question_id=" + form.getAttribute("data-question-id"), true);
+			xhr.setRequestHeader('X-CSRF-Token', "<%= form_authenticity_token %>");
+		  xhr.onload = function(event) {
+		    if (xhr.status === 200) {
+		    	var res = JSON.parse(xhr.response);
+					window.history.pushState("", "", "/survey/" + res.current_question_id);
+					document.getElementById("next-button").className = res.next_question_count ? '' : 'hidden';
+					document.getElementById("back-button").className = res.previous_question_count ? '' : 'hidden';
+					form.parentNode.removeChild(form);
+
+					// Display the new current question.
+					// There is probably a better way to do this.
+					var leftForms = document.getElementsByClassName("left")
+					var leftForm = leftForms[leftForms.length - 1];
+					if(leftForm) {
+						newForm = leftForm;
+						leftForm.className = "active";
+					} else {
+						var rightForms = document.getElementsByClassName("right");
+						rightForm = rightForms[0];
+						if(rightForm) {
+							rightForm.className = "active";
+						} else {
+							// TODO: Do something with the blank page that's left.
+							console.log("There are no remaining questions.");
+						}
+
+						if(!res.next_question_count) {
+							document.getElementById("results-link").className = "";
+						} else {
+							document.getElementById("results-link").className = "hidden";
+						}
+					}
+		    }
+		  };
+
+		  xhr.send();
+		});
+
+	})();
+
+</script>
