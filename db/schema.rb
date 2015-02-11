@@ -32,9 +32,11 @@ ActiveRecord::Schema.define(version: 20150129203145) do
     t.datetime "updated_at"
   end
 
+  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
+  add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
+
   create_table "questions", force: true do |t|
     t.text     "body"
-    t.integer  "survey_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -45,6 +47,9 @@ ActiveRecord::Schema.define(version: 20150129203145) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "responses", ["choice_id"], name: "index_responses_on_choice_id", using: :btree
+  add_index "responses", ["user_id"], name: "index_responses_on_user_id", using: :btree
 
   create_table "user_proposed_questions", force: true do |t|
     t.integer  "user_id"
@@ -78,5 +83,8 @@ ActiveRecord::Schema.define(version: 20150129203145) do
     t.datetime "updated_at"
     t.integer  "current_question_id"
   end
+
+  add_index "users", ["session_token"], name: "index_users_on_session_token", unique: true, using: :btree
+  add_index "users", ["uid"], name: "index_users_on_uid", unique: true, using: :btree
 
 end
