@@ -71,14 +71,7 @@ form {
 }	
 
 button {
-	display: inline-block;
-	font-size: 18px;
-	padding: 10px 20px;
-	margin: 10px;
 	border-radius: 5px;
-	color: #fff;
-	cursor: pointer;
-	outline: none;
 	background-image: -moz-linear-gradient(top, #2588C7, #1F6FA3);
 	background-image: -webkit-gradient(linear,0 0,0 100%,from( #2588C7),to( #1F6FA3));
 	background-image: -webkit-linear-gradient(top, #2588C7, #1F6FA3);
@@ -109,6 +102,16 @@ button:active {
 	background-image: linear-gradient(to bottom, #1C6796, #2588C7);
 }
 
+.button-basic {
+display: inline-block;
+font-size: 18px;
+padding: 10px 20px;
+margin: 10px;
+color: #fff;
+cursor: pointer;
+outline: none;
+}
+
 .group:after {
 	display: block;
 	content: "";
@@ -126,9 +129,9 @@ button:active {
 	overflow: hidden;
 	cursor: pointer;
 	-webkit-transition: all 0.10s;
-	-moz-transition: all 0.10s;
-	-o-transition: all 0.10s;
-	transition: all 0.10s;
+-moz-transition: all 0.10s;
+-o-transition: all 0.10s;
+transition: all 0.10s;
 }
 
 .background {
@@ -142,6 +145,7 @@ button:active {
 	border-radius: 100px;
 	height: 100px;
 	width: 100px;
+	/*background: red;*/
 }
 
 

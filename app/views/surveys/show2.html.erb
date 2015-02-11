@@ -1,6 +1,6 @@
 <div id="main" class="group">
-	<button class="<%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>" id="back-button">Back</button>
-	<button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
+	<button class="button-basic <%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>" id="back-button">Back</button>
+	<button class="button-basic <%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
 	<a href="<%= result_url %>" class="<%= current_user.next_questions.count > 0 ? 'hidden' : ''%>" id="results-link">View results</a>
 	<% unless current_user.current_question_id  && current_user.current_question_id > 0
 		current_user.update_attribute(:current_question_id, 1)
@@ -30,7 +30,7 @@
 		</form>
 	<% end %>
 	<div id="lower-buttons">
-		<button id="delete-button">I don't want to see this question anymore.</button>
+		<button id="delete-button" class="button-basic">I don't want to see this question anymore.</button>
 	</div>
 </div>
 <script>
