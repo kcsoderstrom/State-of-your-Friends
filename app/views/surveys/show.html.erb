@@ -15,13 +15,13 @@
 				<% question.choices.each do |choice| %>
 					<!-- TODO: THIS SHOULD BE CACHED!! -->
 					<li class="group">
-						<div class="input-container">
-							<input type="radio"
-										 name="response[choice_id]"
-										 value="<%= choice.id %>"
-										 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
-						</div>			 
 						<label>
+							<div class="input-container">
+								<input type="radio"
+											 name="response[choice_id]"
+											 value="<%= choice.id %>"
+											 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
+							</div>			 
 							<%= h(choice.body) %>
 						</label>
 					</li>
