@@ -36,7 +36,7 @@ body {
 }
 
 a {
-		text-decoration: none;
+	text-decoration: none;
 	display: block;
 }
 
@@ -202,6 +202,7 @@ button:active {
 	margin-left: 550px;
 	font-size: 22px;
 	color: #E73F00;
+	padding: 10px;
 }
 
 #results-link:hover {
