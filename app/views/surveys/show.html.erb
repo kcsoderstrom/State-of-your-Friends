@@ -78,6 +78,8 @@
 			
 			if(leftForm) {
 				updateCurrentQuestionId(leftForm, "right");
+				document.getElementsByClassName("active")[0].className = "right hidden";
+				leftForm.className = "active";
 			}
 		});
 
@@ -87,6 +89,8 @@
 
 			if(rightForm) {
 				updateCurrentQuestionId(rightForm, "left");
+				document.getElementsByClassName("active")[0].className = "left hidden";
+				rightForm.className = "active";
 			}
 		});
 
