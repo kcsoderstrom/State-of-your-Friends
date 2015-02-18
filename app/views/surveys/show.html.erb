@@ -1,37 +1,74 @@
-<button class="<%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>" id="back-button">Back</button>
+<div id="main" class="group">
+	<button class="button-basic <%= current_user.previous_questions.count == 0 ? 'hidden' : '' %>" id="back-button">Back</button>
+	<button class="button-basic <%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
+	<a href="<%= result_url %>" class="<%= current_user.next_questions.count > 0 ? 'hidden' : ''%>" id="results-link">View results</a>
+	<% unless current_user.current_question_id  && current_user.current_question_id > 0
+		current_user.update_attribute(:current_question_id, 1)
+		end %>
 
-<% unless current_user.current_question_id  && current_user.current_question_id > 0
-	current_user.update_attribute(:current_question_id, 1)
-	end %>
-
-<% @survey.each do |question| %>
-	<form data-question-id="<%= question.id %>"
-				class="<%= question.id == current_user.current_question_id ?
-								'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
-		<h2><%= h(question.body) %></h2>
-		<ul>
-			<% question.choices.each do |choice| %>
-				<!-- TODO: THIS SHOULD BE CACHED!! -->
-				<li>
-					<label>
-						<input type="radio"
-									 name="response[choice_id]"
-									 value="<%= choice.id %>"
-									 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
-						<%= h(choice.body) %>
-					</label>
-				</li>
-			<% end %>
-		</ul>
-	</form>
-<% end %>
-
-<button id="delete-button">I don't want to see this question anymore.</button>
-<button class="<%= current_user.next_questions.count == 0 ? 'hidden' : '' %>" id="next-button">Next</button>
-
-<a href="<%= result_url %>" class="<%= current_user.next_questions.count > 0 ? 'hidden' : ''%>" id="results-link">View results</a>
-
+	<% @survey.each do |question| %>
+		<form data-question-id="<%= question.id %>"
+					class="<%= question.id == current_user.current_question_id ?
+									'active' : (question.id > current_user.current_question_id ? 'right hidden' : 'left hidden' )%>">
+			<h2><%= h(question.body) %></h2>
+			<ul>
+				<% question.choices.each do |choice| %>
+					<!-- TODO: THIS SHOULD BE CACHED!! -->
+					<li class="group">
+						<div class="input-container">
+							<input type="radio"
+										 name="response[choice_id]"
+										 value="<%= choice.id %>"
+										 <%= current_user.responses.map(&:choice_id).include?(choice.id) ? "checked" : "" %>>
+						</div>			 
+						<label>
+							<%= h(choice.body) %>
+						</label>
+					</li>
+				<% end %>
+			</ul>
+		</form>
+	<% end %>
+	<div id="lower-buttons">
+		<button id="delete-button" class="button-basic">I don't want to see this question anymore.</button>
+	</div>
+</div>
 <script>
+	document.addEventListener("DOMContentLoaded", function(event) {
+	  var forms = document.getElementsByTagName("form");
+
+	  function changeChecked(inputs) {
+	  	for (var i = 0; i < inputs.length; i++) {
+	  		inputs[i].checked = false;
+	  		var inputContainerList = inputs[i].parentNode.classList;
+
+	  		if (inputContainerList.contains("background")) {
+	  			inputContainerList.remove("background");
+	  		}
+	  	}
+	  }
+
+	  function changeInputColor(inputContainers, event){
+  		if (event.target.className.indexOf("input-container") !== -1){
+  			changeChecked(inputContainers);
+  			event.target.classList.add("background");
+  			event.target.getElementsByTagName("input")[0].checked = true
+  		}
+	  }
+
+	  function addChangeInputColor(){
+		  for (var i = 0; i < forms.length; i++) {
+		  	forms[i].addEventListener("click", function(event) {
+		  	var inputContainers = event.currentTarget.getElementsByTagName("input");
+		  	changeInputColor(inputContainers, event);
+		  	});
+		  }
+		}
+
+		addChangeInputColor();
+
+	});
+	
 	(function() {
 		var currentForm = document.getElementsByClassName("active")[0];
 		var allForms = document.getElementsByTagName("form");
