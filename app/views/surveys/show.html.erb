@@ -135,8 +135,8 @@
 		    if (xhr.status === 200) {
 		    	var res = JSON.parse(xhr.response);
 					window.history.pushState("", "", "/survey/" + res.current_question_id);
-					document.getElementById("next-button").className = res.next_question_count ? '' : 'hidden';
-					document.getElementById("back-button").className = res.previous_question_count ? '' : 'hidden';
+					document.getElementById("next-button").className = res.next_question_count ? 'button-basic' : 'hidden';
+					document.getElementById("back-button").className = res.previous_question_count ? 'button-basic' : 'hidden';
 					document.getElementsByClassName("active")[0].className = dir + " hidden";
 					newForm.className = "active";
 
@@ -161,8 +161,8 @@
 		    if (xhr.status === 200) {
 		    	var res = JSON.parse(xhr.response);
 					window.history.pushState("", "", "/survey/" + res.current_question_id);
-					document.getElementById("next-button").className = res.next_question_count ? '' : 'hidden';
-					document.getElementById("back-button").className = res.previous_question_count ? '' : 'hidden';
+					document.getElementById("next-button").className = res.next_question_count ? 'button-basic' : 'hidden';
+					document.getElementById("back-button").className = res.previous_question_count ? 'button-basic' : 'hidden';
 					form.parentNode.removeChild(form);
 
 					// Display the new current question.
