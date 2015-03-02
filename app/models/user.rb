@@ -31,14 +31,14 @@ class User < ActiveRecord::Base
   end
 
   def add_default_survey
-    (1..5).each do |q_id|
+    # This doesn't seem very sustainable. Should perhaps add is_default boolean to db.
+    (1..8).each do |q_id|
       self.user_survey_questions.new(question_id: q_id)
     end
   end
 
   def self.generate_session_token
     SecureRandom.hex(16)
-    #really should make sure this isn't being used.
   end
 
   def reset_session_token!
