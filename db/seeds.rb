@@ -1,11 +1,11 @@
 question1 = Question.create!({body: "At what age did you have your first child?", id: 1})
-question1.choices.create!({body: "<18yrs"}, {body: "18-20yrs"}, {body: "20-25yrs"}, {body: "25-30yrs"}, {body: "30+yrs"}, {body: "I have no children."})
+question1.choices.create!([{body: "<18yrs"}, {body: "18-20yrs"}, {body: "20-25yrs"}, {body: "25-30yrs"}, {body: "30+yrs"}, {body: "I have no children."}])
 
 question2 = Question.create!({body: "What is your gender?", id: 2})
-question2.choices.create!({body: "Cis Male"}, {body: "Cis Female"}, {body: "Trans Male"}, {body: "Trans Female"}, {body: "Other"})
+question2.choices.create!([{body: "Cis Male"}, {body: "Cis Female"}, {body: "Trans Male"}, {body: "Trans Female"}, {body: "Other"}])
 														
 question3 = Question.create!({body: "For the majority of your childhood, did you grow up in a single-parent household?", id: 3})
-question3.choices.create!({body: "No, both parents were present, in one home or with equal custody."}, {body: "Yes, and I lived with my mother."}, {body: "Yes, and I lived with my father."}, {body: "Other."})
+question3.choices.create!([{body: "No, both parents were present, in one home or with equal custody."}, {body: "Yes, and I lived with my mother."}, {body: "Yes, and I lived with my father."}, {body: "Other."}])
 
 question4 = Question.create!({body: "Are you familiar with the term \"Social Justice\"?", id: 4})
 question4.choices.create!([{body: "Yes, and I actively support the movement."}, {body: "Yes, and I don't care strongly about it."}, {body: "Yes, and I am actively against the movement."}, {body: "No."}, {body: "Other."}])
@@ -24,3 +24,6 @@ question7.choices.create!([{body: "1"}, {body: "2"}, {body: "3-5"}, {body: "6-10
 
 question8 = Question.create!({body: "Have you ever been paid to write code, either through a stipend or in industry?", id: 8})
 question8.choices.create!([{body: "Yes"}, {body: "No"}])
+
+question9 = Question.create!({body: "Do you have a degree or a job in a STEM field?", id: 9})
+question9.choices.create!([{body: "Yes"}, {body: "No"}])
